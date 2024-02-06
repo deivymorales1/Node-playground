@@ -72,7 +72,7 @@ const listar = async (req, res) => {
 };
 
 const uno = async (req, res) => {
-  // Recoger una id por la url
+  // Recoger un id por la url
   try {
     let id = req.params.id;
     // Buscar el articulo
@@ -90,8 +90,6 @@ const uno = async (req, res) => {
       mensaje: "Error al buscar el artículo",
     });
   }
-
-  // Devolver resultado
 };
 
 const borrar = async (req, res) => {
@@ -100,8 +98,10 @@ const borrar = async (req, res) => {
 
     let articulo = await Articulo.findOneAndDelete({ _id: id });
 
+    // Devolver el resultado
     return res.status(200).json({
       status: "success",
+      articulo,
       mensaje: "Metodo de borrar",
     });
   } catch (error) {
@@ -237,7 +237,7 @@ const buscar = async (req, res) => {
     // Sacar el string de busqueda
     let busqueda = req.params.busqueda;
 
-    // Find or
+    // Find OR
     let articulosEncontrados = await Articulo.find({
       $or: [
         { titulo: { $regex: busqueda, $options: "i" } },
@@ -251,7 +251,7 @@ const buscar = async (req, res) => {
         mensaje: "No se han encontrado artículos",
       });
     }
-
+    // Devolver resultados
     return res.status(200).json({
       status: "success",
       articulosEncontrados,
@@ -262,9 +262,6 @@ const buscar = async (req, res) => {
       mensaje: "Error al buscar articulos",
     });
   }
-  // Orden
-  // Ejecutar consulta
-  // Devolver resultado
 };
 
 module.exports = {
