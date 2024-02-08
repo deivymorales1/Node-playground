@@ -1,5 +1,6 @@
 // Importaciones
-const {validate} = require("../helpers/validate");
+const { validate } = require("../helpers/validate");
+const User = require("../models/user");
 
 // accion de prueba
 const prueba = (req, res) => {
@@ -32,20 +33,40 @@ const register = (req, res) => {
     });
   }
   // Control usuarios duplicados
+  User.find({
+    $or: [
+      { email: params.email.toLowerCase() },
+      { nick: params.nick.toLowerCase() },
+    ],
+  }).exec((error, users) => {
+    if (error) {
+      return res.status(500).send({
+        status: "error",
+        message: "Error en la consulta de control de usuarios duplicados",
+      });
+    }
 
-  // Cifrar contrasenia
+    if (users && users.length >= 1) {
+      return res.status(200).send({
+        status: "error",
+        message: "El usuario ya existe",
+      });
+    }
 
-  // Crear objeto del usuario
+    // Cifrar contrasenia
 
-  // Guardar usuario en la bbdd
+    // Crear objeto del usuario
 
-  // Limpiar el objeto a devolver
+    // Guardar usuario en la bbdd
 
-  // Devolver un resultado
+    // Limpiar el objeto a devolver
 
-  return res.status(200).send({
-    status: "success",
-    message: "Metodo de registro",
+    // Devolver un resultado
+
+    return res.status(200).send({
+      status: "success",
+      message: "Metodo de registro",
+    });
   });
 };
 
