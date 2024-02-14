@@ -12,42 +12,32 @@ const prueba = (req, res) => {
 };
 
 // Registro
-const register = (req, res) => {
-  // Recoger datos de la peticion
-  let params = req.body;
-  console.log(params);
-  // Comprobar que me llegan bien
-  if (!params.name || !params.nick || !params.email || !params.password) {
-    return res.status(400).send({
-      status: "error",
-      message: "Faltan datos por enviar",
-    });
-  }
-  // Validar los datos
+const register = async (req, res) => {
   try {
-    validate(params);
-  } catch (error) {
-    return res.status(400).send({
-      status: "error",
-      message: "Validacion no superada",
-      error,
-    });
-  }
-  // Control usuarios duplicados
-  User.find({
-    $or: [
-      { email: params.email.toLowerCase() },
-      { nick: params.nick.toLowerCase() },
-    ],
-  }).exec(async (error, users) => {
-    if (error) {
-      return res.status(500).send({
+    // Recoger datos de la peticion
+    let params = req.body;
+    console.log(params);
+
+    // Comprobar que me llegan bien
+    if (!params.name || !params.nick || !params.email || !params.password) {
+      return res.status(400).send({
         status: "error",
-        message: "Error en la consulta de control de usuarios duplicados",
+        message: "Faltan datos por enviar",
       });
     }
 
-    if (users && users.length >= 1) {
+    // Validar los datos
+    validate(params);
+
+    // Control usuarios duplicados
+    const existingUsers = await User.find({
+      $or: [
+        { email: params.email.toLowerCase() },
+        { nick: params.nick.toLowerCase() },
+      ],
+    });
+
+    if (existingUsers && existingUsers.length >= 1) {
       return res.status(200).send({
         status: "error",
         message: "El usuario ya existe",
@@ -62,27 +52,26 @@ const register = (req, res) => {
     let userToSave = new User(params);
 
     // Guardar usuario en la bbdd
-    userToSave.save((error, userStored) => {
-      if (error || !userStored) {
-        return res.status(500).send({
-          status: "error",
-          message: "Error al registrar usuario",
-        });
-      }
+    const userStored = await userToSave.save();
 
-      // Limpiar el objeto a devolver
-      let userCreated = userStored.toObject();
-      delete userStored.password;
-      delete userStored.role;
+    // Limpiar el objeto a devolver
+    let userCreated = userStored.toObject();
+    delete userCreated.password;
+    delete userCreated.role;
 
-      // Devolver un resultado
-      return res.status(200).send({
-        status: "success",
-        message: "usuario registrado correctamente",
-        user: userCreated,
-      });
+    // Devolver un resultado
+    return res.status(200).send({
+      status: "success",
+      message: "usuario registrado correctamente",
+      user: userCreated,
     });
-  });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error al registrar usuario",
+      error: error,
+    });
+  }
 };
 
 module.exports = {
