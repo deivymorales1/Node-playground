@@ -1,4 +1,5 @@
 // Importaciones
+const bcrypt = require("bcrypt");
 const { validate } = require("../helpers/validate");
 const User = require("../models/user");
 
@@ -38,7 +39,7 @@ const register = (req, res) => {
       { email: params.email.toLowerCase() },
       { nick: params.nick.toLowerCase() },
     ],
-  }).exec((error, users) => {
+  }).exec(async (error, users) => {
     if (error) {
       return res.status(500).send({
         status: "error",
@@ -54,18 +55,32 @@ const register = (req, res) => {
     }
 
     // Cifrar contrasenia
+    let pwd = await bcrypt.hash(params.password, 10);
+    params.password = pwd;
 
     // Crear objeto del usuario
+    let userToSave = new User(params);
 
     // Guardar usuario en la bbdd
+    userToSave.save((error, userStored) => {
+      if (error || !userStored) {
+        return res.status(500).send({
+          status: "error",
+          message: "Error al registrar usuario",
+        });
+      }
 
-    // Limpiar el objeto a devolver
+      // Limpiar el objeto a devolver
+      let userCreated = userStored.toObject();
+      delete userStored.password;
+      delete userStored.role;
 
-    // Devolver un resultado
-
-    return res.status(200).send({
-      status: "success",
-      message: "Metodo de registro",
+      // Devolver un resultado
+      return res.status(200).send({
+        status: "success",
+        message: "usuario registrado correctamente",
+        user: userCreated,
+      });
     });
   });
 };
