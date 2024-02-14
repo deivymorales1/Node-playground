@@ -2,6 +2,7 @@
 const bcrypt = require("bcrypt");
 const { validate } = require("../helpers/validate");
 const User = require("../models/user");
+const jwt = require("../helpers/jwt");
 
 // accion de prueba
 const prueba = (req, res) => {
@@ -76,18 +77,51 @@ const register = async (req, res) => {
 
 const login = (req, res) => {
   // Recoger los parametros de la peticion
+  let params = req.body;
 
   // Comprobar que me llegan
+  if (!params.email || !params.password) {
+    return res.status(400).send({
+      status: "error",
+      message: "Faltan datos por enviar",
+    });
+  }
 
   // Buscar en la bbdd si existe el mail
+  User.findOne({ email: params.email })
+    .select("+password +role")
+    .exec((error, user) => {
+      if (error || !user) {
+        return res.status(404).send({
+          status: "error",
+          message: "No existe el usuario",
+        });
+      }
 
-  // Comprobar su contrase;a
+      // Comprobar su contrase;a
+      const pwd = bcrypt.compareSync(params.password, user.password);
+      if (!pwd) {
+        return res.status(400).send({
+          status: "error",
+          message: "Login incorrecto",
+        });
+      }
 
-  // Conseguir token jwt 
+      // Limpiar objetos
+      let identityUser = user.toObject();
+      delete identityUser.password;
+      delete identityUser.role;
+      // Conseguir token jwt
+      const token = jwt.createToken(user);
 
-  // Devolver datos usuario y token
-
-  
+      // Devolver datos usuario y token
+      return res.status(200).send({
+        status: "success",
+        message: "Metodo login",
+        user: identityUser,
+        token,
+      });
+    });
 };
 
 module.exports = {
