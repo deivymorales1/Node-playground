@@ -74,7 +74,24 @@ const register = async (req, res) => {
   }
 };
 
+const login = (req, res) => {
+  // Recoger los parametros de la peticion
+
+  // Comprobar que me llegan
+
+  // Buscar en la bbdd si existe el mail
+
+  // Comprobar su contrase;a
+
+  // Conseguir token jwt 
+
+  // Devolver datos usuario y token
+
+  
+};
+
 module.exports = {
   prueba,
   register,
+  login,
 };
