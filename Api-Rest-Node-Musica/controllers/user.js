@@ -134,25 +134,44 @@ const login = async (req, res) => {
   }
 };
 
-const profile = (req, res) => {
-  // Recoger id usuario url
-  const id = req.params.id;
+const profile = async (req, res) => {
+  try {
+    // Recoger id usuario url
+    const id = req.params.id;
 
-  // Consulta para sacar los datos del perfil
-  User.findById(id, (error, user) => {
-    if (error || !user) {
+    // Consulta para sacar los datos del perfil
+    const user = await User.findById(id);
+
+    if (!user) {
       return res.status(404).send({
         status: "error",
         message: "El usuario no existe",
       });
     }
+
     // Devolver resultado
     return res.status(200).send({
       status: "success",
       id,
       user,
     });
-  });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error interno del servidor",
+    });
+  }
+};
+
+const update = (req, res) => {
+  // Recoger datos usuario
+
+  // Recoger datos a actualizar
+
+  // Comprobar si el usuario existe
+
+  // Comprobar si usuario existe y no soy yo (el identificado)
 };
 
 module.exports = {
@@ -160,4 +179,5 @@ module.exports = {
   register,
   login,
   profile,
+  update,
 };
