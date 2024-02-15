@@ -75,7 +75,7 @@ const register = async (req, res) => {
   }
 };
 
-const login = (req, res) => {
+const login = async (req, res) => {
   // Recoger los parametros de la peticion
   let params = req.body;
 
@@ -87,45 +87,76 @@ const login = (req, res) => {
     });
   }
 
-  // Buscar en la bbdd si existe el mail
-  User.findOne({ email: params.email })
-    .select("+password +role")
-    .exec((error, user) => {
-      if (error || !user) {
-        return res.status(404).send({
-          status: "error",
-          message: "No existe el usuario",
-        });
-      }
+  try {
+    // Buscar en la bbdd si existe el mail
+    let user = await User.findOne({ email: params.email }).select(
+      "+password +role"
+    );
 
-      // Comprobar su contrase;a
-      const pwd = bcrypt.compareSync(params.password, user.password);
-      if (!pwd) {
-        return res.status(400).send({
-          status: "error",
-          message: "Login incorrecto",
-        });
-      }
-
-      // Limpiar objetos
-      let identityUser = user.toObject();
-      delete identityUser.password;
-      delete identityUser.role;
-      // Conseguir token jwt
-      const token = jwt.createToken(user);
-
-      // Devolver datos usuario y token
-      return res.status(200).send({
-        status: "success",
-        message: "Metodo login",
-        user: identityUser,
-        token,
+    if (!user) {
+      return res.status(404).send({
+        status: "error",
+        message: "No existe el usuario",
       });
+    }
+
+    // Comprobar su contrasena
+    const pwd = bcrypt.compareSync(params.password, user.password);
+    if (!pwd) {
+      return res.status(400).send({
+        status: "error",
+        message: "Login incorrecto",
+      });
+    }
+
+    // Limpiar objetos
+    let identityUser = user.toObject();
+    delete identityUser.password;
+    delete identityUser.role;
+
+    // Conseguir token jwt
+    const token = jwt.createToken(user);
+
+    // Devolver datos usuario y token
+    return res.status(200).send({
+      status: "success",
+      message: "Metodo de login",
+      user: identityUser,
+      token,
     });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error interno del servidor",
+    });
+  }
+};
+
+const profile = (req, res) => {
+  // Recoger id usuario url
+  const id = req.params.id;
+
+  // Consulta para sacar los datos del perfil
+  User.findById(id, (error, user) => {
+    if (error || !user) {
+      return res.status(404).send({
+        status: "error",
+        message: "El usuario no existe",
+      });
+    }
+    // Devolver resultado
+    return res.status(200).send({
+      status: "success",
+      id,
+      user,
+    });
+  });
 };
 
 module.exports = {
   prueba,
   register,
   login,
+  profile,
 };
