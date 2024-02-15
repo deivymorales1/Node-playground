@@ -235,10 +235,32 @@ const update = async (req, res) => {
   }
 };
 
+const upload = (req, res) => {
+  // Configuracion de subida (multer)
+
+  // Recoger fichero de imagen y comprobar si existe
+
+  // Conseguir el nombre del archivo
+
+  // Sacar info de la imagen
+
+  // Comprobar si la extension es valida
+
+  // Si es correcto, guardar la imagen en bbdd
+
+  // Return response
+  return res.status(200).send({
+    status: "success",
+    message: "Metodo subir imagenes",
+    file: req.file,
+  });
+};
+
 module.exports = {
   prueba,
   register,
   login,
   profile,
   update,
+  upload,
 };
