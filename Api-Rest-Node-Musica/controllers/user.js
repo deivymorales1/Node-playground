@@ -164,14 +164,75 @@ const profile = async (req, res) => {
   }
 };
 
-const update = (req, res) => {
-  // Recoger datos usuario
+const update = async (req, res) => {
+  try {
+    // Recoger datos usuario
+    let userIdentity = req.user;
 
-  // Recoger datos a actualizar
+    // Recoger datos a actualizar
+    let userToUpdate = req.body;
 
-  // Comprobar si el usuario existe
+    // Validate user input
+    validate(userToUpdate);
 
-  // Comprobar si usuario existe y no soy yo (el identificado)
+    // Check if the user exists
+    const users = await User.find({
+      $or: [
+        { email: userToUpdate.email.toLowerCase() },
+        { nick: userToUpdate.nick.toLowerCase() },
+      ],
+    });
+
+    // Check if the user exist and is not the currently authenticated user
+    let userIsset = false;
+    users.forEach((user) => {
+      if (user && user._id != userIdentity.id) {
+        userIsset = true;
+      }
+    });
+
+    // If  the user already exists, return a response
+    if (userIsset) {
+      return res.status(200).send({
+        status: "success",
+        message: "El usuario ya existe",
+      });
+    }
+
+    // Encrypt password if provided
+    if (userToUpdate.password) {
+      let pwd = await bcrypt.hash(userToUpdate.password, 10);
+      userToUpdate.password = pwd;
+    } else {
+      delete userToUpdate.password;
+    }
+
+    // Find the user in the database and update their data
+    let userUpdated = await User.findByIdAndUpdate(
+      userIdentity.id,
+      userToUpdate,
+      { new: true }
+    );
+
+    if (!userUpdated) {
+      return res.status(400).send({
+        status: "error",
+        message: "Error al actualizar",
+      });
+    }
+
+    // Return response
+    return res.status(200).send({
+      status: "success",
+      user: userUpdated,
+    });
+  } catch (error) {
+    console.log("Error", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error al actualizar",
+    });
+  }
 };
 
 module.exports = {
