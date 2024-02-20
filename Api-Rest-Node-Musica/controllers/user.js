@@ -2,8 +2,10 @@
 const bcrypt = require("bcrypt");
 const { validate } = require("../helpers/validate");
 const fs = require("fs");
+const path = require("path");
 const User = require("../models/user");
 const jwt = require("../helpers/jwt");
+const { error } = require("console");
 
 // accion de prueba
 const prueba = (req, res) => {
@@ -296,6 +298,24 @@ const upload = async (req, res) => {
   }
 };
 
+const avatar = (req, res) => {
+  // Sacar el parametro de la url
+  const file = req.params.file;
+  // Montar el path real de la imagen
+  const filePath = "./uploads/avatars/" + file;
+  // Comprobar que existe el fichero
+  fs.stat(filePath, (error, exists) => {
+    if (error || !exists) {
+      return res.status(404).send({
+        status: "error",
+        message: "No existe la imagen",
+      });
+    }
+
+    return res.sendFile(path.resolve(filePath));
+  });
+};
+
 module.exports = {
   prueba,
   register,
@@ -303,4 +323,5 @@ module.exports = {
   profile,
   update,
   upload,
+  avatar,
 };

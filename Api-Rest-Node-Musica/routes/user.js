@@ -33,6 +33,8 @@ router.post(
   [check.auth, uploads.single("file0")],
   UserController.upload
 );
+router.get("/avatar/:file", UserController.avatar);
+
 
 // Exportar router
 module.exports = router;
