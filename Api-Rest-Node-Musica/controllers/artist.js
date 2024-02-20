@@ -27,26 +27,64 @@ const save = async (req, res) => {
   }
 };
 
-const one = (req, res) => {
-  // Sacar un parametro por la url
-  const artistId = req.params.id;
+const one = async (req, res) => {
+  try {
+    // Sacar un parametro por la url
+    const artistId = req.params.id;
 
-  // Find
-  Artist.findById(artistId, (error, artist) => {
-    if (error || !artist) {
+    // Find
+    const artist = await Artist.findById(artistId);
+
+    if (!artist) {
       return res.status(404).send({
         status: "error",
         message: "No existe el artista",
       });
     }
+
     return res.status(200).send({
       status: "success",
       artist,
     });
-  });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error al buscar el artista",
+      error: error.message,
+    });
+  }
+};
+
+const list = async (req, res) => {
+  try {
+    // Sacar la posible pagina
+    let page = 1;
+
+    if (req.params.page) {
+      page = req.params.page;
+    }
+
+    // Definir un numero de elementos por página
+    const itemsPerPage = 5;
+
+    // Find, ordenarlo y paginarlo
+    const artists = await Artist.find().sort("name").exec();
+
+    return res.status(200).send({
+      status: "success",
+      artists,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error al buscar los artistas",
+      error: error.message,
+    });
+  }
 };
 
 module.exports = {
   save,
   one,
+  list,
 };
