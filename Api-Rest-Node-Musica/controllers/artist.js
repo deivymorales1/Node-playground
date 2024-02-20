@@ -16,19 +16,37 @@ const save = async (req, res) => {
     return res.status(200).send({
       status: "success",
       message: "Artista guardado",
-      artist: artistStored
+      artist: artistStored,
     });
   } catch (error) {
     return res.status(200).send({
       status: "error",
       message: "No se ha guardado el artista",
-      error: error.message
+      error: error.message,
     });
   }
 };
 
+const one = (req, res) => {
+  // Sacar un parametro por la url
+  const artistId = req.params.id;
 
+  // Find
+  Artist.findById(artistId, (error, artist) => {
+    if (error || !artist) {
+      return res.status(404).send({
+        status: "error",
+        message: "No existe el artista",
+      });
+    }
+    return res.status(200).send({
+      status: "success",
+      artist,
+    });
+  });
+};
 
 module.exports = {
   save,
+  one,
 };
