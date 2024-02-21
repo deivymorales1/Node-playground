@@ -1,5 +1,7 @@
 // Importar modelo
 const Artist = require("../models/artist");
+const Album = require("../models/album");
+const Song = require("../models/song");
 const fs = require("fs");
 const path = require("path");
 
@@ -147,21 +149,28 @@ const remove = async (req, res) => {
     // Hacer consulta para buscar y eliminar el artista
     const artistRemoved = await Artist.findByIdAndDelete(artistId);
 
-    // Remove de albums
+    // Eliminar los álbumes del artista
+    const albumsRemoved = await Album.deleteMany({ artist: artistId });
 
-    // Remove de songs
+    // Recoger los IDs de los álbumes eliminados
+    const albumIds = albumsRemoved.map((album) => album._id);
+
+    // Eliminar las canciones asociadas a los álbumes eliminados
+    const songsRemoved = await Song.deleteMany({ album: { $in: albumIds } });
 
     // Devolver resultado
     return res.status(200).send({
-      status: "error",
-      message: "Artista eliminado",
+      status: "success",
+      message: "Artista y sus elementos asociados eliminados con éxito",
       artistRemoved,
+      albumsRemoved,
+      songsRemoved,
     });
   } catch (error) {
     return res.status(500).send({
       status: "error",
       message: "Error al eliminar al artista o algunos de sus elementos",
-      error,
+      error: error.message,
     });
   }
 };
