@@ -1,5 +1,8 @@
-// Importaciones
+// Importar modelo
 const Artist = require("../models/artist");
+
+// Dependencias
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 // Accion guardar artista
 const save = async (req, res) => {
@@ -61,19 +64,38 @@ const list = async (req, res) => {
     let page = 1;
 
     if (req.params.page) {
-      page = req.params.page;
+      page = parseInt(req.params.page); // Convert page to integer
     }
 
     // Definir un numero de elementos por página
     const itemsPerPage = 5;
 
+    const options = {
+      page: page,
+      limit: itemsPerPage,
+      select: "-password -role -__v",
+      sort: { name: 1 }, // Sort by name in ascending order
+    };
+
     // Find, ordenarlo y paginarlo
-    const artists = await Artist.find().sort("name").exec();
+    const result = await Artist.paginate({}, options);
+
+    if (!result.docs || result.docs.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        message: "No hay artistas",
+      });
+    }
 
     return res.status(200).send({
       status: "success",
-      artists,
+      page: result.page,
+      itemsPerPage: result.limit,
+      total: result.totalDocs,
+      artists: result.docs,
     });
+
+
   } catch (error) {
     return res.status(500).send({
       status: "error",

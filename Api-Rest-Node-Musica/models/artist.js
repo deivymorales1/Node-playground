@@ -1,6 +1,7 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
-const ArtistSchema = Schema({
+const ArtistSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -16,4 +17,6 @@ const ArtistSchema = Schema({
   },
 });
 
-module.exports = model("Artist", ArtistSchema, "artists");
+ArtistSchema.plugin(mongoosePaginate)
+
+module.exports = mongoose.model("Artist", ArtistSchema, "artists");
