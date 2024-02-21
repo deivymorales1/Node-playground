@@ -112,26 +112,55 @@ const update = async (req, res) => {
     const data = req.body;
 
     // Buscar y actualizar artista
-    const artistUpdated = await Artist.findByIdAndUpdate(id, data, {new: true});
+    const artistUpdated = await Artist.findByIdAndUpdate(id, data, {
+      new: true,
+    });
 
-    if(!artistUpdated){
+    if (!artistUpdated) {
       return res.status(404).send({
-        status: 'error',
-        message: 'No se ha actualizado el artista',
+        status: "error",
+        message: "No se ha actualizado el artista",
       });
     }
 
     return res.status(200).send({
-      status: 'success',
-      message: 'Artista actualizado con exito',
-    })
-
+      status: "success",
+      message: "Artista actualizado con exito",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
-      status: 'error',
-      message: 'Error interno del servidor',
-    })
+      status: "error",
+      message: "Error interno del servidor",
+    });
+  }
+};
+
+// Metodo para borrar artista
+const remove = async (req, res) => {
+  // Sacar el id del artista de la url
+  const artistId = req.params.id;
+
+  try {
+    // Hacer consulta para buscar y eliminar el artista
+    const artistRemoved = await Artist.findByIdAndDelete(artistId);
+
+    // Remove de albums
+
+    // Remove de songs
+
+    // Devolver resultado
+    return res.status(200).send({
+      status: "error",
+      message: "Artista eliminado",
+      artistRemoved,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error al eliminar al artista o algunos de sus elementos",
+      error,
+    });
   }
 };
 
@@ -140,4 +169,5 @@ module.exports = {
   one,
   list,
   update,
+  remove,
 };
