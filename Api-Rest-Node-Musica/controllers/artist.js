@@ -94,8 +94,6 @@ const list = async (req, res) => {
       total: result.totalDocs,
       artists: result.docs,
     });
-
-
   } catch (error) {
     return res.status(500).send({
       status: "error",
@@ -105,8 +103,41 @@ const list = async (req, res) => {
   }
 };
 
+const update = async (req, res) => {
+  try {
+    // Recoger el id artista url
+    const id = req.params.id;
+
+    // Recoger datos body
+    const data = req.body;
+
+    // Buscar y actualizar artista
+    const artistUpdated = await Artist.findByIdAndUpdate(id, data, {new: true});
+
+    if(!artistUpdated){
+      return res.status(404).send({
+        status: 'error',
+        message: 'No se ha actualizado el artista',
+      });
+    }
+
+    return res.status(200).send({
+      status: 'success',
+      message: 'Artista actualizado con exito',
+    })
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 'error',
+      message: 'Error interno del servidor',
+    })
+  }
+};
+
 module.exports = {
   save,
   one,
   list,
+  update,
 };
