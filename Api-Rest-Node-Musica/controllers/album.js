@@ -47,14 +47,14 @@ const one = async (req, res) => {
     const albumId = req.params.id;
     // find y popular info del artist
     const album = await Album.findById(albumId).populate("artist").exec();
-    
+
     if (!album) {
       return res.status(404).send({
         status: "error",
         message: "No se ha encontrado el album",
       });
     }
-    
+
     return res.status(200).send({
       status: "success",
       album,
@@ -68,8 +68,47 @@ const one = async (req, res) => {
   }
 };
 
+const list = async (req, res) => {
+  try {
+    // Sacar el id del artista de la URL
+    const artistId = req.params.artistId;
+
+    // Verificar si se proporcionó un ID de artista
+    if (!artistId) {
+      return res.status(404).send({
+        status: "error",
+        message: "No se ha encontrado el artista",
+      });
+    }
+
+    // Buscar todos los álbumes de un artista en particular
+    const albums = await Album.find({ artist: artistId }).populate('artist').exec();
+
+    // Verificar si se encontraron albumes
+    if (!albums || albums.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        message: "No se ha encontrado el artista",
+      });
+    }
+
+    // Enviar la respuesta con los albumes encontrados
+    return res.status(200).send({
+      status: "success",
+      albums,
+    });
+  } catch (error) {
+    console.log("Error retrieveing  albums:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error retrieving albums",
+    });
+  }
+};
+
 module.exports = {
   album,
   save,
   one,
+  list,
 };
