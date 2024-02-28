@@ -20,7 +20,7 @@ const SongSchema = new mongoose.Schema({
   },
   file: {
     type: String,
-    required: true,
+    default: "default.mp3",
   },
   created_at: {
     type: Date,
@@ -30,4 +30,4 @@ const SongSchema = new mongoose.Schema({
 
 SongSchema.plugin(mongoosePaginate);
 
-module.exporst = mongoose.model("Song", SongSchema, "songs");
+module.exports = mongoose.model("Song", SongSchema, "songs");
