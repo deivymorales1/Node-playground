@@ -101,9 +101,44 @@ const list = async (req, res) => {
   }
 };
 
+const update = async (req, res) => {
+  try {
+    // Parametro url id de cancion
+    let songId = req.params.id;
+
+    let data = req.body;
+
+    const songUpdated = await Song.findByIdAndUpdate(songId, data, {
+      new: true,
+    }).exec();
+
+    if (!songUpdated) {
+      return res.status(500).send({
+        status: "error",
+        message: "La cancion no se ha actualizado",
+      });
+    }
+
+    return res.status(200).send({
+      status: "success",
+      song: songUpdated,
+    });
+  } catch (error) {
+    console.error("Error al actualizar la cancion:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error al actualizar la cancion",
+    });
+  }
+
+  // Datos para guardar
+  // Busqueda y actualizacion
+};
+
 module.exports = {
   song,
   save,
   one,
   list,
+  update,
 };
