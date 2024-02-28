@@ -13,6 +13,7 @@ const SongController = require("../controllers/song");
 // Definir rutas
 router.get("/prueba", SongController.song);
 router.post("/save", check.auth, SongController.save);
+router.get("/one/:id", check.auth, SongController.one);
 
 // Exportar router
 module.exports = router;

@@ -38,9 +38,36 @@ const save = async (req, res) => {
   }
 };
 
+const one = async (req, res) => {
+  try {
+    // Recoger un parametro de la URL
+    let songId = req.params.id;
 
+    // Consultar la base de datos
+    const song = await Song.findById(songId).populate("album").exec();
+
+    if (!song) {
+      return res.status(404).send({
+        status: "error",
+        message: "La cancion no existe",
+      });
+    }
+
+    return res.status(200).send({
+      status: "success",
+      song,
+    });
+  } catch (error) {
+    console.error("Error al obtener la canción:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error al obtener la canción",
+    });
+  }
+};
 
 module.exports = {
   song,
   save,
+  one,
 };
