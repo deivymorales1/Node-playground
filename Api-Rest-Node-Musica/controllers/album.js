@@ -82,7 +82,9 @@ const list = async (req, res) => {
     }
 
     // Buscar todos los álbumes de un artista en particular
-    const albums = await Album.find({ artist: artistId }).populate('artist').exec();
+    const albums = await Album.find({ artist: artistId })
+      .populate("artist")
+      .exec();
 
     // Verificar si se encontraron albumes
     if (!albums || albums.length === 0) {
@@ -106,9 +108,44 @@ const list = async (req, res) => {
   }
 };
 
+const update = async (req, res) => {
+  try {
+    // Recoger un param URL
+    const albumId = req.params.albumId;
+    // Recoger el body
+    const data = req.body;
+
+    // Find y un update
+    const albumUpdated = await Album.findByIdAndUpdate(albumId, data, {
+      new: true,
+    });
+
+    // Verificar si se actulizo el album
+    if (!albumUpdated) {
+      return res.status(500).send({
+        status: "error",
+        message: "No se ha actualizado el album",
+      });
+    }
+
+    // Enviar la respuesta con el album actualizado
+    return res.status(200).send({
+      status: "success",
+      album: albumUpdated,
+    });
+  } catch (error) {
+    console.error("Error updating album:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error updating album",
+    });
+  }
+};
+
 module.exports = {
   album,
   save,
   one,
   list,
+  update,
 };
