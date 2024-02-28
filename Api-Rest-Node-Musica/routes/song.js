@@ -14,6 +14,7 @@ const SongController = require("../controllers/song");
 router.get("/prueba", SongController.song);
 router.post("/save", check.auth, SongController.save);
 router.get("/one/:id", check.auth, SongController.one);
+router.get("/list/:albumId", check.auth, SongController.list);
 
 // Exportar router
 module.exports = router;

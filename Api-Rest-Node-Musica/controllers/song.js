@@ -66,8 +66,44 @@ const one = async (req, res) => {
   }
 };
 
+const list = async (req, res) => {
+  try {
+    let albumId = req.params.albumId;
+
+    const songs = await Song.find({ album: albumId })
+      .populate({
+        path: "album",
+        populate: {
+          path: "artist",
+          model: "Artist",
+        },
+      })
+      .sort("track")
+      .exec();
+
+    if (!songs || songs.length === 0) {
+      return res.status(404).send({
+        status: "error",
+        message: "No hay canciones",
+      });
+    }
+
+    return res.status(200).send({
+      status: "success",
+      songs,
+    });
+  } catch (error) {
+    console.error("Error al listar las canciones:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error al listar las canciones",
+    });
+  }
+};
+
 module.exports = {
   song,
   save,
   one,
+  list,
 };
