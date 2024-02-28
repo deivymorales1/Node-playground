@@ -1,5 +1,7 @@
 // Importar modelos
 const Album = require("../models/album");
+const fs = require("fs");
+const path = require("path");
 
 // accion de prueba
 const album = (req, res) => {
@@ -142,10 +144,96 @@ const update = async (req, res) => {
   }
 };
 
+const upload = async (req, res) => {
+  // Configuracion de subida (multer)
+
+  // Recoger album id
+  let albumId = req.params.id;
+
+  // Recoger fichero de imagen y comprobar si existe
+  if (!req.file) {
+    return res.status(404).send({
+      status: "error",
+      message: "La peticion no incluye la imagen",
+    });
+  }
+
+  // Conseguir el nombre del archivo
+  let image = req.file.originalname;
+
+  // Sacar info de la imagen
+  const imageSplit = image.split(".");
+  const extension = imageSplit[1];
+
+  // Comprobar si la extension es valida
+  if (
+    extension != "png" &&
+    extension != "jpg" &&
+    extension != "jpeg" &&
+    extension != "gpej"
+  ) {
+    // borrar archivo
+    const filePath = req.file.path;
+    const fileDeleted = fs.unlinkSync(filePath);
+
+    // Devolver error
+    return res.status(404).send({
+      status: "error",
+      message: "La extension no es valida",
+    });
+  }
+
+  try {
+    // Si es correcto, guardar la imagen en bbdd
+    const albumUpdated = await Album.findOneAndUpdate(
+      {
+        _id: albumId,
+      },
+      { image: req.file.filename },
+      { new: true }
+    );
+
+    // Return response
+    return res.status(200).send({
+      status: "success",
+      album: albumUpdated,
+      file: req.file,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error en la subida",
+    });
+  }
+};
+
+const image = (req, res) => {
+  // Sacar el parametro de la url
+  const file = req.params.file;
+  // Montar el path real de la imagen
+  const filePath = "./uploads/albums/" + file;
+  // Comprobar que existe el fichero
+  fs.stat(filePath, (error, exists) => {
+    if (error || !exists) {
+      return res.status(404).send({
+        status: "error",
+        message: "No existe la imagen",
+      });
+    }
+
+    return res.sendFile(path.resolve(filePath));
+  });
+};
+
+// Borrar album
+
+
 module.exports = {
   album,
   save,
   one,
   list,
   update,
+  upload,
+  image,
 };
