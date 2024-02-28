@@ -41,7 +41,35 @@ const save = async (req, res) => {
   }
 };
 
+const one = async (req, res) => {
+  try {
+    // Sacar el id del album
+    const albumId = req.params.id;
+    // find y popular info del artist
+    const album = await Album.findById(albumId).populate("artist").exec();
+    
+    if (!album) {
+      return res.status(404).send({
+        status: "error",
+        message: "No se ha encontrado el album",
+      });
+    }
+    
+    return res.status(200).send({
+      status: "success",
+      album,
+    });
+  } catch (error) {
+    console.error("Error retrieving album:", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error retrieving album",
+    });
+  }
+};
+
 module.exports = {
   album,
   save,
+  one,
 };
