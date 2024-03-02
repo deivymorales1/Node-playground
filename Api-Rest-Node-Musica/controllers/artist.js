@@ -150,21 +150,20 @@ const remove = async (req, res) => {
     const artistRemoved = await Artist.findByIdAndDelete(artistId);
 
     // Eliminar los álbumes del artista
-    const albumsRemoved = await Album.deleteMany({ artist: artistId });
+    const albums = await Album.find({ artist: artistId });
 
-    // Recoger los IDs de los álbumes eliminados
-    const albumIds = albumsRemoved.map((album) => album._id);
+    for (const album of albums) {
+      await Song.deleteMany({ album: album._id });
+    }
 
-    // Eliminar las canciones asociadas a los álbumes eliminados
-    const songsRemoved = await Song.deleteMany({ album: { $in: albumIds } });
+    // Eliminar los albumes del artista
+    await Album.deleteMany({ artist: artistId });
 
     // Devolver resultado
     return res.status(200).send({
       status: "success",
       message: "Artista y sus elementos asociados eliminados con éxito",
       artistRemoved,
-      albumsRemoved,
-      songsRemoved,
     });
   } catch (error) {
     return res.status(500).send({
