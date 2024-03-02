@@ -2,6 +2,7 @@
 const Album = require("../models/album");
 const fs = require("fs");
 const path = require("path");
+const Song = require("../models/song");
 
 // accion de prueba
 const album = (req, res) => {
@@ -225,8 +226,39 @@ const image = (req, res) => {
   });
 };
 
-// Borrar album
+// Metodo para borrar album
+const remove = async (req, res) => {
+  // Sacar el id del artista de la url
+  const albumId = req.params.id;
 
+  try {
+    // Hacer consulta para buscar y eliminar el album
+    const albumRemoved = await Album.findByIdAndDelete(albumId);
+
+    if (!albumRemoved) {
+      return res.status(404).send({
+        status: "error",
+        message: "Album no encontrado",
+      });
+    }
+
+    // Eliminar las canciones del album
+    await Song.deleteMany({ album: albumId });
+
+    // Devolver resultado
+    return res.status(200).send({
+      status: "success",
+      message: "Álbum y sus canciones asociadas eliminadas con éxito",
+      albumRemoved,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: "error",
+      message: "Error al eliminar el álbum o algunas de sus canciones",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   album,
@@ -236,4 +268,5 @@ module.exports = {
   update,
   upload,
   image,
+  remove
 };
