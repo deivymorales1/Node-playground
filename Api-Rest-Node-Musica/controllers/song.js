@@ -130,9 +130,33 @@ const update = async (req, res) => {
       message: "Error al actualizar la cancion",
     });
   }
+};
 
-  // Datos para guardar
-  // Busqueda y actualizacion
+const remove = async (req, res) => {
+  try {
+    // Parametro del id de la cancion
+    let songId = req.params.id;
+
+    const songRemoved = await Song.findByIdAndDelete(songId).exec();
+
+    if (!songRemoved) {
+      return res.status(500).send({
+        status: "error",
+        message: "La cancion no se ha borrado",
+      });
+    }
+
+    return res.status(200).send({
+      status: "success",
+      song: songRemoved,
+    });
+  } catch (error) {
+    console.error("Error al borrar la cancion: ", error);
+    return res.status(500).send({
+      status: "error",
+      message: "Error al borrar la cancion",
+    });
+  }
 };
 
 module.exports = {
@@ -141,4 +165,5 @@ module.exports = {
   one,
   list,
   update,
+  remove,
 };
