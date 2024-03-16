@@ -1,0 +1,17 @@
+{
+  "name": "clase_2_midu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "http.js",
+  "scripts": {
+    "dev:1": "nodemon 1.http.js",
+    "dev:2": "nodemon 2.routing.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "standard": "^17.1.0"
+  }
+}
