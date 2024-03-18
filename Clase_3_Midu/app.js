@@ -14,11 +14,13 @@ app.use(cors({
             'https://movies.com',
             'https://midu.dev'
         ];
+       
 
+        
         if(!origin || ACCEPTED_ORIGINS.includes(origin)){
             return callback(null, origin)
         }
-
+    
         return callback(new Error('Not allowed by CORS'));
     }
 }))
