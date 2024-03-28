@@ -2,20 +2,21 @@
 GET http://localhost:1234/movies
 
 ### Recuperar una pelicula por id
-GET http://localhost:1234/movies/decccadekakhkhfd
+GET http://localhost:1234/movies/93780a30-ecb4-11ee-aaac-18c04dd8e4c7
 
 ### Recuperar todas las peliculas por un genero
-GET http://localhost:1234/movies?genre=ACTION
+GET http://localhost:1234/movies?genre=Drama
 
 ### Crear una pelicula con POST
 POST http://localhost:1234/movies
 Content-Type: application/json
 
 {
-    "title": "The Godfather",
-    "year": 1975,
-    "director": "Francis Ford Coppola",
-    "duration": 175,
+    "sql": "SELECT * FROM users",
+    "title": "King Kong",
+    "year": 1988,
+    "director": "No se quien polainas",
+    "duration": 188,
     "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
     "genre": [
         "Crime",

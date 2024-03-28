@@ -1,13 +1,21 @@
 import { Router} from 'express'
-
 import { MovieController } from '../controllers/movies.js';
 
-export const moviesRouter  = Router()
+// Funcion para evitar saber el modelo
+export const createMovieRouter = ({ movieModel }) => {
+  const moviesRouter  = Router()
 
-moviesRouter.get('/', MovieController.getAll)
-moviesRouter.get('/:id', MovieController.getById)
-moviesRouter.post('/', MovieController.create)
-moviesRouter.delete('/:id', MovieController.delete)
-moviesRouter.patch('/:id', MovieController.update)
+  const movieController = new MovieController({ movieModel})
+
+  moviesRouter.get('/', movieController.getAll)
+  moviesRouter.post('/', movieController.create)
+
+  moviesRouter.get('/:id', movieController.getById)
+  moviesRouter.delete('/:id', movieController.delete)
+  moviesRouter.patch('/:id', movieController.update)
+  // Devolver creacion del router
+  return moviesRouter
+}
+
 
  
