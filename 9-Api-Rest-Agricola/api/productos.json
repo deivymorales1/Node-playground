@@ -1,0 +1,10 @@
+{
+  "product_name" : "Aguacate",
+  "name_producer" : "Deivy",
+  "description": "Description del producte",
+  "weigth": 455,
+  "unit_weigth": "kg",
+  "precio" : 123514
+}
+
+
