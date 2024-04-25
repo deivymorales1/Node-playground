@@ -6,7 +6,7 @@ const User = require("../models/user");
 const followService = require("../services/followService");
 
 // Importar dependencias
-const mongoosePaginate = require("mongoose-paginate-v2");
+const mongoosePaginate = require("mongoose-paginate-v2");                      
 
 // Accion de guardar un follow (accion seguir)
 const save = async (req, res) => {
