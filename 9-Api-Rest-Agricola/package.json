@@ -1,0 +1,13 @@
+{
+  "name": "9-api-rest-agricola",
+  "version": "1.0.0",
+  "description": "Breve explicacion de la razon de este proyecto:",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
