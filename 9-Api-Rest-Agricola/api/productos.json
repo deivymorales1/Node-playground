@@ -1,10 +1,19 @@
-{
-  "product_name" : "Aguacate",
-  "name_producer" : "Deivy",
-  "description": "Description del producte",
-  "weigth": 455,
-  "unit_weigth": "kg",
-  "precio" : 123514
-}
+[
+  {
+    "product_name" : "Aguacate",
+    "name_producer" : "Deivy",
+    "description": "Description del producte",
+    "weigth": 500,
+    "unit_weigth": "gr",
+    "precio" : 6000
+  },
+  {
+    "product_name" : "Cacao",
+    "name_producer" : "Deivy",
+    "description": "Description del producto",
+    "weigth": 500,
+    "unit_weigth": "gr",
+    "precio" : 5000
+  }
 
-
+]
