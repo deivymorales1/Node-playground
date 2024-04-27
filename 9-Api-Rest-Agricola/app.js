@@ -1,10 +1,17 @@
-// Imports
-import { createServer } from "node:http";
+import express from 'express';
+import productos from './data/productos.json';
+const app = express();
 
-// Create server local
+// 
 
-const server = createServer();
 
-server.listen(8000, "127.0.0.1", () => {
-  console.log("Listen");
-});
+  app.get('/productos', (req,res) => {
+    res.json(productos)
+  })
+
+  const PORT = process.env.PORT || 3000
+
+  app.listen(PORT, () => {
+    console.log(`Server listening on port`);
+  })
+

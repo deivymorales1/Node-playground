@@ -2,12 +2,16 @@
   "name": "9-api-rest-agricola",
   "version": "1.0.0",
   "description": "Breve explicacion de la razon de este proyecto:",
-  "main": "script.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "dev": "node app.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "expres": "^0.0.5",
+    "express": "^4.19.2"
+  }
 }
