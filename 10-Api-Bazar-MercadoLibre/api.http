@@ -1,0 +1,6 @@
+// Get all products
+GET http://localhost:3000/
+
+// Get one product by id
+
+GET http://localhost:3000/
