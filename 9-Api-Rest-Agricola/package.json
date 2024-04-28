@@ -1,6 +1,7 @@
 {
   "name": "9-api-rest-agricola",
   "version": "1.0.0",
+<<<<<<< HEAD
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -10,4 +11,20 @@
   "keywords": [],
   "author": "",
   "license": "ISC"
+=======
+  "description": "Breve explicacion de la razon de este proyecto:",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "expres": "^0.0.5",
+    "express": "^4.19.2",
+    "react-router-dom": "^6.23.0"
+  }
+>>>>>>> dev
 }

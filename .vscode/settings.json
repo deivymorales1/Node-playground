@@ -1,7 +1,11 @@
 {
+<<<<<<< HEAD
   "doki.sticker.css": "",
   "doki.statusbar.name": "Programador",
   "doki.background.enabled": true,
   "doki.wallpaper.enabled": true,
   "livePreview.defaultPreviewPath": "/Clase_3_Midu/web/index.html"
+=======
+  "livePreview.defaultPreviewPath": "/9-Api-Rest-Agricola/web/index.html"
+>>>>>>> dev
 }
