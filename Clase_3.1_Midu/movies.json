@@ -1,0 +1,21 @@
+[{
+    "id" : "decccadekakhkhfd",
+    "title": "The Shawshank Redemption",
+    "year": 1994,
+    "director": 142,
+    "poster": "https://c7.alamy.com/compes/2jh2myr/robbins-poster-la-redencion-de-shawshank-1994-2jh2myr.jpg",
+    "genre": ["Drama"],
+    "rate": 9.3
+},
+{
+    "id" : "deccfafa33-cadekakhkhfd",
+    "title": "Inception",
+    "year": 2010,
+    "director": "Christopher Nolan",
+    "duration": 148,
+    "poster": "https://assets1.ignimgs.com/2012/09/27/inceptionmovieheaderjpg-441ad5.jpg?width=1080",
+    "genre": ["Action", "Adventure", "Sci-Fi"],
+    "rate": 8.8
+}
+
+]

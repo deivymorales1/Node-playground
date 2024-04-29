@@ -1,18 +1,19 @@
-// Import dependencies
-import express, {json} from "express";
-import cors from 'cors';
-const app = express();
-const port = 3000;
+import express from "express";
+import cors from cors;
+import { ProductoRouter } from "./routers/productos.js";
 
-// Configure cors
+
+const app = express();
+const port = 12345;
+
+// Uso de cors
+app.use(express.json())
 app.use(cors());
 
-// Load routes
+// Monta las rutas
+app.use('/productos', ProductoRouter);
 
-
-
-// Listen port
-app.listen(port, () =>{
-  console.log('Listen');
-})
+app.listen(port, () => {
+  console.log(`Servidor escuchando en el puerto ${port}`);
+});
 
