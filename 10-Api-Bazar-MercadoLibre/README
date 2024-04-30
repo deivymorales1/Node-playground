@@ -30,6 +30,7 @@ Home con caja de búsqueda
 
 Ruta: /
 Descripción: Simplemente muestra una caja de búsqueda para poder hacer la búsqueda de productos. Al realizar la búsqueda navegar a la vista de Resultados de búsqueda.
+
 Resultados de búsqueda:
 
 Ruta: /items?search=, por ejemplo: /items/?search=laptop
