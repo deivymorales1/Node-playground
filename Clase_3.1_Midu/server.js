@@ -22,7 +22,7 @@ app.use(cors({
 }));
 
 // Monta las rutas
-app.use('/', routes);89
+app.use('/', routes);
 
 app.listen(PORT, () => {
     console.log(`Escuchando en el puerto: ${PORT}`);

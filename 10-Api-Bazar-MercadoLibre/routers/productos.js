@@ -1,10 +1,15 @@
 import { Router } from "express";
-import { ProductController } from "../controllers/productos";
+import { getAllProducts, getProductById } from '../controllers/productos.js';
 
-export const ProductoRouter = () => {
-  const productosRouter = Router();
+// Inicialimos el Router()
+const productosRouter = Router()
 
-  productosRouter.get('/', ProductController.getAllProducts);
 
-  return productosRouter;
-};
+// Declaramos las rutas
+productosRouter.get('/', getAllProducts);
+productosRouter.get('/:id', getProductById);
+
+
+// Exportamos las rutas
+export default productosRouter;
+
