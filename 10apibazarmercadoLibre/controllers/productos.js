@@ -6,7 +6,7 @@ export const getAllProducts = (req, res) => {
     res.json(productos);
 };
 
-// End point SearchParams
+// End point searchParams
 export const getSearch = (req, res) => {
     // Sacamos la palabra buscada
     const { search } = req.params;

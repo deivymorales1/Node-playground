@@ -4,7 +4,7 @@ import productosRouter from "./routers/productos.js";
 
 
 const app = express();
-const port = 12345;
+const port = 1234;
 
 // Uso de cors
 app.use(express.json())
@@ -12,7 +12,7 @@ app.use(cors({
     origin: (origin, callback) => {
         const ACCEPTED_ORIGINS = [
             'http://localhost:3000',
-            'http://localhost:12345',
+            'http://localhost:1234',
             'https://movies.com',
             'https://midu.dev'
         ];
